@@ -8,14 +8,17 @@
  * @format
  */
 
-import React from 'react';
+import * as React from 'react';
 import {
   SafeAreaView,
   StyleSheet,
   ScrollView,
   View,
   Text,
+  Image,
   StatusBar,
+  ImageBackground,
+  Button
 } from 'react-native';
 
 import {
@@ -26,53 +29,70 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+import { NavigationContainer, useNavigation, NavigationProp, ParamListBase } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+
+const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator();
+
 declare const global: {HermesInternal: null | {}};
+
+const image = { uri: "https://reactjs.org/logo-og.png" };
 
 const App = () => {
   return (
     <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.tsx</Text> to change
-                this screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
+      <NavigationContainer>
+        {/* <Stack.Navigator>
+          <Stack.Screen 
+            name="Home"
+            component={HomeScreen}
+            options={{
+              headerShown: false
+            }}/>
+          <Stack.Screen 
+            name="ProfileScreen"
+            component={ProfileScreen}
+            options={({ navigation, route }) => ({
+              headerShown: false
+            })}
+           />
+        </Stack.Navigator> */}
+      <Drawer.Navigator initialRouteName="Home">
+        <Drawer.Screen name="Home" component={HomeScreen} />
+        <Drawer.Screen name="Profile" component={Profile} />
+      </Drawer.Navigator>
+      </NavigationContainer>
+      
     </>
+  );
+};
+
+export interface NavigationProps {
+  navigation: NavigationProp<ParamListBase>
+}
+
+function HomeScreen({navigation}: NavigationProps) {
+ 
+  return (
+    <View>
+      <Button
+        title="Go to Huan's profile"
+        onPress={() =>
+          // navigation.navigate('Profile')
+          alert('This is a button!')
+        }
+      />
+    </View>
+  );
+};
+function Profile({}){
+  const name:string = "Huan";
+  return (
+    <View>
+      <Text>This is {name}'s profile</Text>
+    </View>
   );
 };
 
@@ -112,6 +132,21 @@ const styles = StyleSheet.create({
     padding: 4,
     paddingRight: 12,
     textAlign: 'right',
+  },
+  randomImage:{
+    width:500,
+    height:100,
+    resizeMode:"repeat"
+
+  },
+  container: {
+    flex: 1,
+    flexDirection: "column"
+  },
+  image: {
+    flex: 1,
+    resizeMode: "stretch",
+    justifyContent: "center"
   },
 });
 
